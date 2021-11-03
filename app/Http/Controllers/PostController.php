@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class PostController extends Controller
 {
@@ -16,6 +17,8 @@ class PostController extends Controller
     public function index()
     {
         // $posts = post::all();
+        // $sample = User::where('name', "Ahmed Mansoor")->first();
+        // return $sample;
         $posts = post::where('user_id', Auth()->user()->id)->get();
         return view('createpost')->with('posts', $posts);
     }
@@ -39,11 +42,19 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+
+        $filenamewithExt = $request->file('image')->getClientOriginalName();
+        $filename = pathinfo($filenamewithExt, PATHINFO_FILENAME);
+        $extension = $request->file('image')->getClientOriginalExtension();
+        $fileNameToStore = $filename . '_' . time() . '.' . $extension;
+        $path = $request->file('image')->storeAs('public/postfolder', $fileNameToStore);
+
+
         $post = new post();
         $post->name = $request->input('postname');
         $post->user_id =  Auth()->user()->id;
         $post->detail = $request->input('detail');
-        $post->image = 'imagetest';
+        $post->image = $fileNameToStore;
 
         $post->save();
 

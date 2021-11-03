@@ -6,10 +6,11 @@
         <div class="col-md-8">
             <div class="card">
                 <!-- create form -->
-                <form action="{{route('post.store')}}" method="POST">
+                <form action="{{route('post.store')}}" method="POST" enctype="multipart/form-data">
                     {{csrf_field()}}
                     <input type="text" name="postname">
                     <input type="text" name="detail">
+                    <input type="file" name="image">
                     <input type="submit" value="SUBMIT">
                 </form>
                 <!-- table -->
@@ -27,7 +28,7 @@
                         <tr>
                             <th scope="row">{{$post->name}}</th>
                             <td>{{$post->detail}}</td>
-                            <td>{{$post->image}}</td>
+                            <td><img src="{{asset('/storage/postfolder/'.$post->image)}}" width="40" height="40"></td>
                             <td>{{$post->users->name}}</td>
                         </tr>
 
