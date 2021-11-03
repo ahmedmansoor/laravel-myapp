@@ -25,4 +25,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::group(['prefix' => 'post'], function () {
     Route::get('/', 'PostController@index')->name('post.index');
     Route::post('store', 'PostController@store')->name('post.store');
+    Route::post('update', 'PostController@update')->name('post.update');
+    Route::get('/{id}', 'PostController@show')->name('post.show');
+    Route::get('/{id}/{mansoor}', 'PostController@edit')->name('post.edit');
 });

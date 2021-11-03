@@ -70,8 +70,11 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        return ("Show func");
+        // return ($id);
+        $post = post::find($id);
+        return view('postdetails')->with('post', $post);
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -79,9 +82,10 @@ class PostController extends Controller
      * @param  \App\Models\post  $post
      * @return \Illuminate\Http\Response
      */
-    public function edit(post $post)
+    public function edit($id, $mansoor)
     {
-        //
+        $post = post::find($id);
+        return view('editpost')->with('post', $post);
     }
 
     /**
@@ -93,7 +97,17 @@ class PostController extends Controller
      */
     public function update(Request $request, post $post)
     {
-        //
+
+        $post = post::find($request->input('id'));
+        $post->name = $request->input('postname');
+        $post->user_id =  Auth()->user()->id;
+        $post->detail = $request->input('detail');
+        $post->image = "fileNameToStore";
+
+        $post->save();
+
+
+        return redirect()->back();
     }
 
     /**
