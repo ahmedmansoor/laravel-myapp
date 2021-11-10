@@ -16,11 +16,27 @@ class PostController extends Controller
      */
     public function index()
     {
+
+        //   @foreach($posts as $post)
+        //             <tr>
+        //                 <th scope="row">{{$post->name}}</th>
+        //                 <td>{{$post->detail}}</td>
+        //                 <td><img src="{{asset('/storage/postfolder/'.$post->image)}}" width="40" height="40"></td>
+        //                 <td>{{$post->users->name}}</td>
+        //                 <td><a href="{{route('post.show',['id'=>$post->id])}}">View</a></td>
+        //                 <td><a href="{{route('post.edit',['id'=>$post->id, 'mansoor'=>0])}}">Edit</a></td>
+        //             </tr>
+
+        //             @endforeach
+
+        $posts = post::all();
+        return view('allpost')->with('posts', $posts);
         // $posts = post::all();
         // $sample = User::where('name', "Ahmed Mansoor")->first();
         // return $sample;
-        $posts = post::where('user_id', Auth()->user()->id)->get();
-        return view('createpost')->with('posts', $posts);
+
+        // $posts = post::where('user_id', Auth()->user()->id)->get();
+        // return view('createpost')->with('posts', $posts);
     }
 
 
@@ -32,6 +48,7 @@ class PostController extends Controller
      */
     public function create()
     {
+        return view('createpost');
     }
 
     /**
@@ -59,8 +76,9 @@ class PostController extends Controller
         $post->save();
 
 
-        return redirect()->back();
+        return redirect()->back()->with(session()->flash('alert-success', 'Post Added'));
     }
+
 
     /**
      * Display the specified resource.
@@ -102,12 +120,18 @@ class PostController extends Controller
         $post->name = $request->input('postname');
         $post->user_id =  Auth()->user()->id;
         $post->detail = $request->input('detail');
-        $post->image = "fileNameToStore";
+        // $post->image = "fileNameToStore";
 
+        $filenamewithExt = $request->file('image')->getClientOriginalName();
+        $filename = pathinfo($filenamewithExt, PATHINFO_FILENAME);
+        $extension = $request->file('image')->getClientOriginalExtension();
+        $fileNameToStore = $filename . '_' . time() . '.' . $extension;
+        $path = $request->file('image')->storeAs('public/postfolder', $fileNameToStore);
+
+        $post->image = $fileNameToStore;
         $post->save();
 
-
-        return redirect()->back();
+        return redirect()->back()->with(session()->flash('alert-success', 'Post Updated'));
     }
 
     /**

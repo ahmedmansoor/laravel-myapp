@@ -23,7 +23,9 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::group(['prefix' => 'post'], function () {
+
     Route::get('/', 'PostController@index')->name('post.index');
+    Route::get('create', 'PostController@create')->name('post.create');
     Route::post('store', 'PostController@store')->name('post.store');
     Route::post('update', 'PostController@update')->name('post.update');
     Route::get('/{id}', 'PostController@show')->name('post.show');
