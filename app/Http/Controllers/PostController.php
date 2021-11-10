@@ -115,22 +115,25 @@ class PostController extends Controller
      */
     public function update(Request $request, post $post)
     {
-
         $post = post::find($request->input('id'));
         $post->name = $request->input('postname');
         $post->user_id =  Auth()->user()->id;
         $post->detail = $request->input('detail');
-        // $post->image = "fileNameToStore";
 
-        $filenamewithExt = $request->file('image')->getClientOriginalName();
-        $filename = pathinfo($filenamewithExt, PATHINFO_FILENAME);
-        $extension = $request->file('image')->getClientOriginalExtension();
-        $fileNameToStore = $filename . '_' . time() . '.' . $extension;
-        $path = $request->file('image')->storeAs('public/postfolder', $fileNameToStore);
+        if (file_exists($request->file('image'))) {
+            $filenamewithExt = $request->file('image')->getClientOriginalName();
+            $filename = pathinfo($filenamewithExt, PATHINFO_FILENAME);
+            $extension = $request->file('image')->getClientOriginalExtension();
+            $fileNameToStore = $filename . '_' . time() . '.' . $extension;
+            $path = $request->file('image')->storeAs('public/postfolder', $fileNameToStore);
 
-        $post->image = $fileNameToStore;
+            $post->image = $fileNameToStore;
+        } else {
+
+            $post->image = $request->input('existingimg');
+        }
+
         $post->save();
-
         return redirect()->back()->with(session()->flash('alert-success', 'Post Updated'));
     }
 

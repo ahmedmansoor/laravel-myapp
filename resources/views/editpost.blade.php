@@ -14,7 +14,8 @@
 
                     <input type="text" name="postname" value="{{$post->name}}">
                     <input type="text" name="detail" value="{{$post->detail}}">
-                    <input type="file" name="image" value="{{$post->image}}">
+                    <input type="file" name="image">
+                    <input type="hidden" name="existingimg" value="{{$post->image}}">
                     <input type="hidden" name="id" value="{{$post->id}}">
                     <input type="submit" value="SUBMIT">
                 </form>
